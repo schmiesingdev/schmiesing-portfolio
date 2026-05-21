@@ -7,32 +7,55 @@ alwaysApply: true
 
 ## Stack
 - Next.js 16 App Router · React 19 · Tailwind v4 · TypeScript · shadcn/ui · Vercel
+- AI: Vercel AI SDK (`ai` + `@ai-sdk/react`) · Anthropic claude-3-5-haiku
+- Analytics: `@vercel/analytics` + `@vercel/speed-insights` (already in `app/layout.tsx`)
 
 ## File & Folder Structure
 
 ```
 app/               # Routes and layouts only — no business logic
-components/        # Shared UI components
-  ui/              # shadcn-generated primitives (do not hand-edit)
-lib/               # Utilities, helpers, server-only logic
-content/           # All site copy and data as typed TypeScript objects
-hooks/             # Client-side custom hooks
+  api/
+    chat/          # Streaming AI chat endpoint
+    search/        # Semantic search endpoint
+  devlog/          # MDX-powered devlog pages
+components/
+  sections/        # Full-page sections (hero, about, skills, projects, contact)
+  chat/            # AI chat widget (client components)
+  ui/              # shadcn-generated primitives — do NOT hand-edit
+lib/
+  ai/              # System prompt builders, AI utilities
+  embeddings/      # Embedding generation and vector search helpers
+  utils.ts         # cn() and other shared utilities
+content/           # All site copy as typed TypeScript objects
+  index.ts         # Barrel re-export for all content modules
+  devlog/          # MDX files for devlog entries (*.mdx)
+scripts/           # One-off ops (seed:embeddings, etc.) — not imported at runtime
 ```
 
 ## Components
 
 - Default to **Server Components** — no `"use client"` unless the component uses browser APIs, event handlers, or React hooks.
 - One component per file. File name matches the component name in kebab-case: `hero-section.tsx` exports `HeroSection`.
-- Place page-specific components in `app/(section)/` beside the page. Place reusable components in `components/`.
+- Place section-level components in `components/sections/`. Place reusable UI in `components/`.
+- AI/chat interactivity lives in `components/chat/` — all files there are `"use client"`.
 
 ## Content & Data
 
-- All site copy (bio, projects, skills, etc.) lives in `content/` as typed TypeScript objects — never hardcoded in JSX.
-- Export a single typed constant per file, e.g. `content/projects.ts` exports `const projects: Project[]`.
-- This content is fed to the AI chat assistant as context — keep it structured and machine-readable.
+- All site copy (bio, projects, skills, certifications, etc.) lives in `content/` as typed TypeScript objects — never hardcoded in JSX.
+- Export a single typed constant per file: `content/projects.ts` → `export const projects: Project[]`.
+- Re-export everything through `content/index.ts` so imports stay clean: `import { projects, bio } from "@/content"`.
+- **Adding a new project**: edit `content/projects.ts` only. The AI chat, semantic search, and project cards all derive from that single source. See the project skill for the full workflow.
+- This content feeds the AI chat system prompt — keep it structured and machine-readable.
 
 ## TypeScript
 
 - Prefer `type` over `interface` for object shapes.
 - No `any`. Use `unknown` and narrow it, or define a proper type.
 - Colocate types with the data they describe (e.g. `type Project` lives in `content/projects.ts`).
+
+## Scripts
+
+- `npm run dev` — local dev server
+- `npm run build` — production build
+- `npm run seed:embeddings` — regenerate project embeddings (run after adding a project)
+- Never import from `scripts/` in app code — scripts are standalone CLI tools.

@@ -2,17 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { navLinks } from "@/content";
 import { cn } from "@/lib/utils";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  function resolveHref(href: string) {
+    if (!href.startsWith("#")) return href;
+    return isHome ? href : `/${href}`;
+  }
 
   return (
     <header
@@ -24,30 +32,21 @@ export function Nav() {
       )}
     >
       <nav className="mx-auto max-w-5xl px-6 flex items-center justify-between h-16">
-        <a
-          href="#"
+        <Link
+          href="/"
           className="font-heading font-bold text-lg tracking-tight text-foreground hover:text-primary transition-colors duration-200"
         >
           MS
-        </a>
+        </Link>
         <ul className="flex items-center gap-8">
           {navLinks.map((link) => (
             <li key={link.href}>
-              {link.href.startsWith("#") ? (
-                <a
-                  href={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer"
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link
-                  href={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  {link.label}
-                </Link>
-              )}
+              <Link
+                href={resolveHref(link.href)}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>

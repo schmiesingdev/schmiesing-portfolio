@@ -1,6 +1,6 @@
 ---
-description: shadcn/ui and Tailwind v4 patterns for TSX components
-globs: **/*.tsx
+description: shadcn/ui, Tailwind v4, and streaming UI patterns for TSX components in the portfolio
+globs: "**/*.tsx"
 alwaysApply: false
 ---
 
@@ -18,7 +18,7 @@ Reach for shadcn primitives before writing raw HTML. If a primitive exists, use 
 <Card><CardContent>...</CardContent></Card>
 ```
 
-Common primitives: `Button`, `Card`, `Badge`, `Dialog`, `Sheet`, `Separator`, `Skeleton`, `Avatar`, `Tooltip`.
+Common primitives available in this project: `Button`, `Card`, `Badge`, `Dialog`, `Sheet`, `Separator`, `Skeleton`, `Avatar`, `Tooltip`.
 
 ## Class Merging
 
@@ -58,4 +58,42 @@ Use Lucide icons at `h-4 w-4` (inline) or `h-5 w-5` (standalone). Import from `l
 
 ```tsx
 <Avatar className="h-12 w-12">...</Avatar>
+```
+
+## Suspense Boundaries for AI/Async Content
+
+Wrap async Server Components that fetch or call AI APIs in `<Suspense>` with a `<Skeleton>` fallback:
+
+```tsx
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+
+<Suspense fallback={<Skeleton className="h-24 w-full" />}>
+  <AISummarySection projectId={id} />
+</Suspense>
+```
+
+Never block the page render waiting for an AI response — always suspend.
+
+## Streaming Chat Status
+
+When rendering chat messages, use the `status` field from `useChat` to show loading state instead of a separate `isLoading` boolean:
+
+```tsx
+const { messages, status } = useChat({ api: "/api/chat" })
+const isStreaming = status === "streaming" || status === "submitted"
+```
+
+## Client Boundary Placement
+
+Push `"use client"` as deep as possible. Pattern: Server Component renders the page shell and passes data down; only the interactive leaf (search input, chat widget) is a Client Component.
+
+```tsx
+// ✅ server fetches data, passes to thin client wrapper
+// app/page.tsx (Server Component)
+<ProjectSearchContainer initialProjects={projects} />
+
+// components/sections/project-search-container.tsx
+"use client"
+// handles search state and renders results
 ```

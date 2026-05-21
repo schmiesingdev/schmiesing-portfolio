@@ -39,5 +39,9 @@ export async function GET(req: Request) {
     }))
     .sort((a, b) => b.score - a.score);
 
-  return NextResponse.json({ results });
+  return NextResponse.json({ results }, {
+    headers: {
+      "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+    },
+  });
 }

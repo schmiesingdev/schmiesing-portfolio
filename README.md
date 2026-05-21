@@ -10,6 +10,7 @@ A personal portfolio built with Next.js 16 App Router that doubles as a live sho
 | UI | React 19, Tailwind v4, shadcn/ui |
 | Language | TypeScript |
 | AI | Vercel AI SDK v6, AI Gateway (Claude, OpenAI embeddings) |
+| Analytics | Vercel Analytics + Speed Insights |
 | Hosting | Vercel (GitHub → preview deploys on PR) |
 
 ## Getting Started
@@ -108,7 +109,7 @@ Search bar in the Projects section. Embeds the query with `openai/text-embedding
 
 All content lives in `content/` as typed TypeScript. To update:
 
-- **Add a project** → edit `content/projects.ts`, then run `npm run seed:embeddings`
+- **Add a project** → edit `content/projects.ts`, then run `npm run seed:embeddings` (or use the `add-project` Cursor skill for a guided checklist)
 - **Update bio** → edit `content/bio.ts`
 - **Add a skill** → edit `content/skills.ts`
 - **Add a certification** → edit `content/certifications.ts`
@@ -132,4 +133,4 @@ Post content here...
 - [x] Phase 2 — Core UI: Hero, About, Skills, Projects, Contact sections
 - [x] Phase 3 — AI Chat: Streaming assistant with RAG-style system prompt
 - [x] Phase 4 — AI Features: Semantic search, cached summaries, devlog
-- [ ] Phase 5 — Polish: Vercel Analytics, performance audit, custom Cursor skill
+- [x] Phase 5 — Polish: Vercel Analytics + Speed Insights, performance audit, refined Cursor rules, custom `add-project` skill

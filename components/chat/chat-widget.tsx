@@ -77,7 +77,7 @@ export function ChatWidget() {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border rounded-t-2xl bg-[#2563EB]">
           <div className="flex items-center gap-2.5">
-            <div className="size-2 rounded-full bg-white/80 animate-pulse" />
+            <div className="size-2 rounded-full bg-white/80 animate-pulse motion-reduce:animate-none" />
             <span className="text-sm font-semibold text-white">
               Ask about Matt
             </span>
@@ -195,9 +195,9 @@ export function ChatWidget() {
             <div className="flex justify-start">
               <div className="bg-muted rounded-2xl rounded-bl-sm px-3.5 py-2.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:0ms]" />
-                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:150ms]" />
-                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:300ms]" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce motion-reduce:animate-none [animation-delay:0ms]" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce motion-reduce:animate-none [animation-delay:150ms]" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce motion-reduce:animate-none [animation-delay:300ms]" />
                 </div>
               </div>
             </div>

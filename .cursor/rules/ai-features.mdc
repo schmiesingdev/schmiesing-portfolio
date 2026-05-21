@@ -1,6 +1,6 @@
 ---
-description: Vercel AI SDK patterns for API routes and AI-powered features
-globs: app/api/**
+description: Vercel AI SDK patterns for API routes and AI-powered features in the portfolio
+globs: "{app/api/**,lib/ai/**,lib/embeddings/**,components/chat/**}"
 alwaysApply: false
 ---
 
@@ -8,19 +8,20 @@ alwaysApply: false
 
 ## API Routes — Streaming
 
-All AI API routes use the Vercel AI SDK with streaming:
+All AI API routes use the Vercel AI SDK with streaming. Import from `@ai-sdk/anthropic`:
 
 ```ts
 // app/api/chat/route.ts
 import { streamText } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { anthropic } from "@ai-sdk/anthropic"
+import { buildSystemPrompt } from "@/lib/ai/system-prompt"
 
 export async function POST(req: Request) {
   const { messages } = await req.json()
 
   const result = streamText({
-    model: openai("gpt-4o-mini"),
-    system: buildSystemPrompt(),  // always inject content/ context
+    model: anthropic("claude-3-5-haiku-20241022"),
+    system: buildSystemPrompt(),
     messages,
   })
 
@@ -30,45 +31,74 @@ export async function POST(req: Request) {
 
 ## System Prompt Construction
 
-Build system prompts from typed `content/` data — never hardcode bio/projects inline:
+System prompt builders live in `lib/ai/`. Import all content from the barrel `@/content`:
 
 ```ts
-import { projects } from "@/content/projects"
-import { bio } from "@/content/bio"
+// lib/ai/system-prompt.ts
+import { projects, bio, skills } from "@/content"
 
-function buildSystemPrompt() {
+export function buildSystemPrompt() {
   return `You are an AI assistant for ${bio.name}'s portfolio...
-  
+
 Projects: ${projects.map(p => `${p.title}: ${p.description}`).join("\n")}
+Skills: ${skills.map(s => s.name).join(", ")}
 `
 }
 ```
 
 ## Client-Side Chat
 
-Use `useChat` from `ai/react` for the chat UI. Keep the hook call in a `"use client"` component:
+Chat UI lives in `components/chat/` — all files are `"use client"`. Use `useChat` from `@ai-sdk/react`:
 
 ```tsx
 "use client"
-import { useChat } from "ai/react"
+import { useChat } from "@ai-sdk/react"
 
 export function ChatWidget() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, status } = useChat({
     api: "/api/chat",
   })
-  // ...
+  // status: "ready" | "submitted" | "streaming" | "error"
 }
 ```
 
-## Caching AI Responses
+## Semantic Search (Embeddings)
 
-For expensive/deterministic AI calls (project summaries), use the `"use cache"` directive from Next.js 16:
+Embedding helpers live in `lib/embeddings/`. The search API route at `app/api/search/route.ts` accepts a `{ query: string }` body and returns ranked project results:
+
+```ts
+// lib/embeddings/ handles:
+// - generateEmbedding(text) → number[]
+// - cosineSimilarity(a, b) → number
+// - Precomputed embeddings loaded from content/embeddings.json at runtime
+```
+
+After adding a new project to `content/projects.ts`, regenerate embeddings:
+```bash
+npm run seed:embeddings
+```
+
+## Caching Expensive AI Calls
+
+For deterministic AI calls (e.g. project summaries), use the `"use cache"` directive:
 
 ```ts
 async function getProjectSummary(projectId: string) {
   "use cache"
-  // result is cached — won't re-run on every request
-  const result = await generateText({ ... })
+  const result = await generateText({ model: anthropic("claude-3-5-haiku-20241022"), ... })
   return result.text
+}
+```
+
+## Error Handling
+
+Wrap all AI route handlers — surface errors as structured JSON, not raw throws:
+
+```ts
+try {
+  const result = streamText({ ... })
+  return result.toDataStreamResponse()
+} catch {
+  return Response.json({ error: "AI unavailable" }, { status: 503 })
 }
 ```

@@ -6,7 +6,8 @@ import { AboutSection } from "@/components/sections/about-section";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { CertificationsSection } from "@/components/sections/certifications-section";
 import { ContactSection } from "@/components/sections/contact-section";
-import { ChatWidget } from "@/components/chat/chat-widget";
+import { ProjectsSkeleton } from "@/components/sections/projects-skeleton";
+import { ChatWidgetLoader } from "@/components/chat/chat-widget-loader";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
       <Nav />
       <main>
         <HeroSection />
-        <Suspense>
+        <Suspense fallback={<ProjectsSkeleton />}>
           <ProjectsSection />
         </Suspense>
         <AboutSection />
@@ -22,9 +23,7 @@ export default function Home() {
         <CertificationsSection />
         <ContactSection />
       </main>
-      <Suspense fallback={null}>
-        <ChatWidget />
-      </Suspense>
+      <ChatWidgetLoader />
     </>
   );
 }

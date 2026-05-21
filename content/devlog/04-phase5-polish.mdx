@@ -1,0 +1,218 @@
+---
+title: "Phase 5: Analytics, Performance Audit & Living Infrastructure"
+date: "2026-05-21"
+slug: "04-phase5-polish"
+summary: "Making the site production-grade: Vercel Analytics, a full Core Web Vitals audit, refined Cursor rules, a custom project skill, and a nav bug fix — all shipped in one commit."
+tags: ["Performance", "Core Web Vitals", "Vercel Analytics", "Cursor Skills", "Next.js 16"]
+---
+
+## What's New
+
+Phase 5 is about hardening what's already built. No new AI features — just making the site measurably faster, correctly observable, and easier to maintain over time.
+
+Four goals:
+
+1. **Vercel Analytics + Speed Insights** — real user performance data, zero config
+2. **Core Web Vitals audit** — eight concrete fixes across LCP, CLS, bundle size, and accessibility
+3. **Cursor rules refinement** — update the AI coding conventions to reflect everything learned across phases 1–4
+4. **Custom project skill** — write a `.cursor/skills/add-project/` skill so adding a new project is a guided, repeatable workflow
+
+---
+
+## Vercel Analytics
+
+Two packages, two lines added to `app/layout.tsx`:
+
+```bash
+npm install @vercel/analytics @vercel/speed-insights
+```
+
+```tsx
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
+// inside <body>
+<Analytics />
+<SpeedInsights />
+```
+
+Both components are no-ops in development. In production on Vercel they automatically capture page views, Web Vitals, and real user performance data — no configuration needed. The data surfaces in the Vercel dashboard under Analytics and Speed Insights tabs.
+
+---
+
+## The Performance Audit
+
+A `performance-optimizer` subagent audited 15 source files and returned 8 prioritized findings. Here's what was fixed and why each one matters.
+
+### 1. Font loading — LCP
+
+**Before:**
+```ts
+const archivo = Archivo({
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
+});
+```
+
+**After:**
+```ts
+const archivo = Archivo({
+  display: "swap",
+});
+```
+
+Two changes, both significant:
+
+- **`preload: false` removed** — Next.js now generates `<link rel="preload">` tags for font files so the browser starts fetching them immediately instead of waiting until CSS is parsed. Since the `<h1>` is the LCP element (it contains the name in a large heading font), this directly improves LCP.
+- **`weight` array removed** — specifying individual weights causes next/font to download a separate file per weight (5 weights × 2 fonts = 10 requests). Omitting the array uses the variable font file instead — 2 requests total, slightly larger but fetched in parallel.
+
+### 2. Social metadata — OG / Twitter cards
+
+The layout had `title` and `description` but no Open Graph or Twitter card tags. When you paste the portfolio URL into LinkedIn, Slack, or iMessage, you'd just get a bare link — no preview card.
+
+```ts
+export const metadata: Metadata = {
+  metadataBase: new URL("https://schmiesing-portfolio.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "https://schmiesing-portfolio.vercel.app",
+    siteName: "schmiesing.dev",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+};
+```
+
+`metadataBase` is required for Next.js to resolve relative image URLs in OG tags. Without it you get a runtime warning and broken absolute URLs in production.
+
+### 3. Suspense fallback for ProjectsSection — CLS
+
+The `ProjectsSection` is an async Server Component that awaits AI-generated summaries before rendering. It was already wrapped in `<Suspense>` but with no fallback:
+
+```tsx
+// Before — layout shifts when content loads in
+<Suspense>
+  <ProjectsSection />
+</Suspense>
+```
+
+```tsx
+// After — skeleton holds the space
+<Suspense fallback={<ProjectsSkeleton />}>
+  <ProjectsSection />
+</Suspense>
+```
+
+`ProjectsSkeleton` is a static component that approximates the section's layout — heading, search bar, and two project card shapes with animated `bg-muted` fills. When the real content loads in, there's no layout shift because the skeleton already occupies the right amount of space.
+
+### 4. Lazy-load ChatWidget — bundle size
+
+The chat widget imports `react-markdown`, `remark-gfm`, `@ai-sdk/react`, and `ai` — none of which are needed before the page is interactive. Previously these were in the initial JS bundle.
+
+`next/dynamic` with `ssr: false` defers the bundle to after hydration. But there's a catch: **`ssr: false` can only be used in a Client Component**. `app/page.tsx` is a Server Component, so the dynamic call lives in a thin wrapper:
+
+```tsx
+// components/chat/chat-widget-loader.tsx
+"use client";
+
+import dynamic from "next/dynamic";
+
+const ChatWidget = dynamic(
+  () => import("@/components/chat/chat-widget").then((m) => ({ default: m.ChatWidget })),
+  { ssr: false }
+);
+
+export function ChatWidgetLoader() {
+  return <ChatWidget />;
+}
+```
+
+`app/page.tsx` just renders `<ChatWidgetLoader />`. The chat widget's JS only loads after the main page content is interactive — roughly ~50KB removed from the critical path.
+
+### 5. Cache-Control on `/api/search`
+
+Search queries are deterministic: same query + same project embeddings = same result. There was no caching on the route, so every keystroke was a fresh serverless function invocation and an embedding API call.
+
+```ts
+return NextResponse.json({ results }, {
+  headers: {
+    "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+  },
+});
+```
+
+The CDN now caches results for 60 seconds and serves stale while revalidating for 5 minutes. Repeated searches for the same query hit the edge instead of a function.
+
+### 6. `motion-reduce:animate-none` — accessibility
+
+Users who set `prefers-reduced-motion` in their OS accessibility settings were still seeing `animate-ping`, `animate-bounce`, and `animate-pulse` animations. One Tailwind class fixes each:
+
+```tsx
+// Before
+<span className="animate-ping ..." />
+
+// After
+<span className="animate-ping motion-reduce:animate-none ..." />
+```
+
+Applied to the availability indicator in the hero, the scroll arrow, and the typing indicator dots in the chat widget.
+
+---
+
+## Cursor Rules Refinement
+
+After building four phases the original three rules were incomplete — they described the intended structure but not the actual one. Updated to reflect reality:
+
+- **`project-conventions.mdc`** — added `lib/ai/`, `lib/embeddings/`, `content/index.ts` barrel pattern, `scripts/` usage, and the `seed:embeddings` step as a required workflow
+- **`ai-features.mdc`** — switched from OpenAI to Anthropic as the chat provider, added embedding/search patterns, error handling conventions, and the correct `@ai-sdk/react` import
+- **`component-patterns.mdc`** — added Suspense boundary patterns for async AI content, `status` field usage from `useChat`, and the client boundary placement principle
+
+Rules should evolve with the codebase. If the code diverges from the rules, the AI assistant will suggest patterns that no longer match reality.
+
+---
+
+## Custom Project Skill
+
+The `add-project` skill lives at `.cursor/skills/add-project/SKILL.md` and is project-scoped (anyone cloning the repo gets it). It surfaces automatically whenever you say something like "add my project" or mention `content/projects.ts`.
+
+The skill contains:
+- A 5-step checklist (draft → verify fields → run seed → visual verification)
+- The full `Project` type schema with field constraints (`description` ≤ 160 chars, `id` rules, `featured` guidance)
+- A common mistakes table
+
+The point isn't that adding a project is hard — it's that the checklist catches the step people always forget (`npm run seed:embeddings`), which would leave semantic search returning stale results silently.
+
+---
+
+## Nav Bug Fix
+
+Discovered during testing: the `MS` logo in the nav used `href="#"`, which scrolls to the top of the current page. On `/devlog`, this meant there was no way to get back to the home page.
+
+Two fixes in `components/nav.tsx`:
+1. Logo changed to `<Link href="/">` — always navigates home
+2. Anchor links (`#projects`, `#about`, etc.) now resolve correctly off-route using `usePathname()`:
+
+```ts
+function resolveHref(href: string) {
+  if (!href.startsWith("#")) return href;
+  return isHome ? href : `/${href}`;
+}
+```
+
+On the home page, `#projects` stays `#projects` (smooth scroll). On `/devlog`, it becomes `/#projects` (navigate home, then scroll).
+
+---
+
+## Cursor Skills Used
+
+- `performance-optimizer` subagent — Core Web Vitals audit
+- `create-skill` — writing the `add-project` project skill
+- `create-rule` — refining the three existing Cursor rules

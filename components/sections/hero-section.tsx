@@ -28,7 +28,7 @@ export function HeroSection() {
         {bio.availableForWork && (
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-1.5 text-sm font-medium text-muted-foreground mb-8 shadow-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             Available for new opportunities
@@ -87,7 +87,7 @@ export function HeroSection() {
         aria-label="Scroll to projects"
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer"
       >
-        <ArrowDown className="h-5 w-5 animate-bounce" />
+        <ArrowDown className="h-5 w-5 animate-bounce motion-reduce:animate-none" />
       </a>
     </section>
   );

@@ -9,3 +9,6 @@ export type { SkillCategory, Skill, ProficiencyLevel } from "./skills";
 
 export { navLinks } from "./nav";
 export type { NavLink } from "./nav";
+
+export { certifications } from "./certifications";
+export type { Certification } from "./certifications";

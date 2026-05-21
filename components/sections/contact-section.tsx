@@ -60,7 +60,7 @@ export function ContactSection() {
 
       <footer className="mt-16 text-center text-xs text-muted-foreground">
         <p>
-          Built with Next.js, shadcn/ui, and Cursor &mdash; {new Date().getFullYear()}
+          Built with Next.js, shadcn/ui, and Cursor &mdash; 2026
         </p>
       </footer>
     </section>

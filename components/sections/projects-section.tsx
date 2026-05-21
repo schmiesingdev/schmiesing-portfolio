@@ -1,7 +1,23 @@
 import { projects } from "@/content";
-import { ProjectCard } from "@/components/project-card";
+import { generateProjectSummary } from "@/lib/ai/generate-summary";
+import { ProjectSearchContainer } from "@/components/sections/project-search-container";
 
-export function ProjectsSection() {
+export type EnrichedProject = (typeof projects)[number] & {
+  aiSummary: string;
+};
+
+export async function ProjectsSection() {
+  const summaries = await Promise.all(
+    projects.map((p) =>
+      generateProjectSummary(p.id, p.longDescription).catch(() => "")
+    )
+  );
+
+  const enriched: EnrichedProject[] = projects.map((p, i) => ({
+    ...p,
+    aiSummary: summaries[i],
+  }));
+
   return (
     <section id="projects" className="py-24 px-6">
       <div className="mx-auto max-w-5xl">
@@ -10,17 +26,12 @@ export function ProjectsSection() {
             Projects
           </h2>
           <p className="text-muted-foreground max-w-lg">
-            A selection of things I&apos;ve built — from AI-integrated platforms to
-            systems engineering.
+            A selection of things I&apos;ve built — from AI-integrated platforms
+            to systems engineering.
           </p>
         </div>
 
-        {/* Grid — automatically accommodates any number of projects from content/projects.ts */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        <ProjectSearchContainer projects={enriched} />
       </div>
     </section>
   );

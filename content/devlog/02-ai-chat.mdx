@@ -1,0 +1,59 @@
+---
+title: "Phase 3: Streaming AI Chat Assistant"
+date: "2026-05-10"
+slug: "02-ai-chat"
+summary: "Building a floating chat widget that lets visitors ask questions about me — powered by Vercel AI SDK v6, streamText, and a RAG-style system prompt."
+tags: ["Vercel AI SDK", "Streaming", "RAG", "Claude"]
+---
+
+## The Feature
+
+Visitors can click the floating chat button (bottom-right) and ask anything about my work, skills, or background. The assistant answers in real-time, streamed token by token.
+
+Under the hood:
+
+1. **API route** at `app/api/chat/route.ts` uses `streamText` from the Vercel AI SDK v6
+2. **System prompt** is built dynamically from the `content/` data files — bio, projects, skills, and certifications are all injected as context
+3. **Client** uses `useChat` from `@ai-sdk/react` with `DefaultChatTransport` — the v6 transport pattern
+
+## The RAG-Style System Prompt
+
+The most interesting part is `lib/ai/system-prompt.ts`. Instead of a static prompt, it assembles context from the typed content modules:
+
+```ts
+// lib/ai/system-prompt.ts
+export function buildSystemPrompt(): string {
+  return `You are an AI assistant representing ${bio.name}...
+  
+Projects:
+${projects.map(p => `- ${p.title}: ${p.longDescription}`).join('\n')}
+
+Skills:
+${skills.map(s => `${s.category}: ${s.items.map(i => i.name).join(', ')}`).join('\n')}
+  `;
+}
+```
+
+When the content changes, the AI context automatically reflects those changes — no manual prompt editing.
+
+## AI SDK v6 Changes
+
+The v6 API has several breaking changes from what most tutorials show:
+
+| Old (v5) | New (v6) |
+|----------|----------|
+| `useChat({ api })` | `useChat({ transport: new DefaultChatTransport({ api }) })` |
+| `toDataStreamResponse()` | `toUIMessageStreamResponse()` |
+| `CoreMessage` | `ModelMessage` / `UIMessage` |
+| `convertToCoreMessages()` | `convertToModelMessages()` |
+
+The `ai-sdk` Cursor skill was essential here — it has validate patterns that catch deprecated API usage and points to the current v6 equivalents.
+
+## Model Choice
+
+Using `"anthropic/claude-sonnet-4.6"` as the model string, routed through Vercel AI Gateway. The gateway handles auth via `AI_GATEWAY_API_KEY` — no provider-specific keys needed.
+
+## Cursor Skills Used
+
+- `ai-sdk` — v6 patterns, streaming response types, `useChat` transport
+- `vercel-functions` — `maxDuration` configuration for the API route

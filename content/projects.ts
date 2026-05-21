@@ -34,8 +34,8 @@ export const projects: Project[] = [
     longDescription:
       "This site is both a portfolio and a proof of concept. Built from scratch on Next.js 16 App Router with React 19, Tailwind v4, TypeScript, and shadcn/ui, it follows a phased roadmap: " +
       "Phase 1 established tooling and Cursor rules; Phase 2 built the core UI as typed Server Components driven by content/ data files; " +
-      "Phase 3 will add a streaming AI chat assistant (Vercel AI SDK + streamText) so visitors can ask questions about my work; " +
-      "Phase 4 will layer in semantic project search via embeddings and AI-generated project summaries cached with Vercel's Cache API; " +
+      "Phase 3 added a streaming AI chat assistant (Vercel AI SDK v6 + streamText) so visitors can ask questions about my work; " +
+      "Phase 4 layered in semantic project search via embeddings + cosine similarity, AI-generated project summaries cached with Next.js 'use cache', and a devlog documenting the build; " +
       "Phase 5 will add Vercel Analytics and a devlog showing real prompts and Cursor skill usage during construction. " +
       "The entire project was built using AI-assisted development workflows — Cursor, Claude, and structured prompt engineering throughout.",
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Vercel AI SDK", "AI / LLM"],

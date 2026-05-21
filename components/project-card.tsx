@@ -2,13 +2,14 @@ import type { Project } from "@/content";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { GithubIcon } from "@/components/icons";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Sparkles } from "lucide-react";
 
 type ProjectCardProps = {
   project: Project;
+  aiSummary?: string;
 };
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, aiSummary }: ProjectCardProps) {
   return (
     <Card className="group flex flex-col h-full border-border bg-card hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
       <CardHeader className="pb-3">
@@ -22,10 +23,23 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-4">
+      <CardContent className="flex-1 pb-4 space-y-3">
         <p className="text-sm text-muted-foreground leading-relaxed">
           {project.description}
         </p>
+        {aiSummary && (
+          <div className="pt-2 border-t border-border/50">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Sparkles className="h-3 w-3 text-primary/60" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                AI TL;DR
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground/80 leading-relaxed italic">
+              {aiSummary}
+            </p>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="flex flex-col items-start gap-3 pt-0">

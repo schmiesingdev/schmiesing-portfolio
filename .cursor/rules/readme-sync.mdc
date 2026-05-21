@@ -1,0 +1,33 @@
+---
+description: Keep README.md in sync whenever changes affect documented content
+alwaysApply: true
+---
+
+# README Sync
+
+After making any change that affects content documented in `README.md`, update the README in the same response.
+
+## Triggers — update README when you change:
+
+| What changed | What to update in README |
+|---|---|
+| `package.json` scripts | Scripts table |
+| `package.json` dependencies | Stack table (if a new major dep) |
+| New file/directory in `app/`, `components/`, `lib/`, `scripts/`, `content/` | Project Structure section |
+| New API route (`app/api/*/route.ts`) | Project Structure + AI Features (if AI-related) |
+| New env variable or `.env.local.example` | Prerequisites table |
+| `content/projects.ts`, `content/skills.ts`, `content/bio.ts` | Content section if the editing workflow changes |
+| Roadmap phase completed | Roadmap checklist — check off the phase |
+| `scripts/generate-embeddings.ts` or seed workflow changes | Scripts table + seed instructions |
+
+## What NOT to update
+
+- Internal implementation details (function names, types, logic)
+- Files that don't change the developer or user workflow
+- Minor refactors with no user-facing impact
+
+## Format rules
+
+- Keep the README factual and concise — no marketing language
+- Code blocks must be copy-pasteable and tested
+- The Scripts table must always match the actual `package.json` scripts exactly

@@ -1,0 +1,54 @@
+---
+title: "Phase 1–2: Foundation, Tooling & Core UI"
+date: "2026-05-01"
+slug: "01-foundation"
+summary: "Setting up Next.js 16, shadcn/ui, Cursor rules, and building every portfolio section as typed Server Components."
+tags: ["Next.js", "shadcn/ui", "Cursor", "TypeScript"]
+---
+
+## What I Built
+
+The first two phases were about building the right foundation before writing a single UI component.
+
+**Phase 1 — Tooling**
+
+Before writing any UI, I initialized the project from `create-next-app` with Next.js 16 App Router and immediately used the `create-rule` Cursor skill to write project-specific coding conventions. These rules live in `.cursor/rules/` and train every subsequent AI interaction in this repo to follow our component patterns, naming conventions, and file structure.
+
+shadcn/ui was initialized using the `shadcn` Cursor skill, which handles the Tailwind v4–specific setup steps. We added only the components we needed: `Button`, `Card`, `Badge`, `Separator`.
+
+**Phase 2 — Core UI**
+
+Every section was built as a **Server Component by default** — no `"use client"` unless strictly required. Content lives in `content/` as typed TypeScript objects, which means:
+
+- The AI chat assistant can consume the same data as the UI
+- Content changes are type-checked at build time
+- There's a single source of truth for every piece of portfolio data
+
+```ts
+// content/projects.ts
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+  longDescription: string;
+  tags: ProjectTag[];
+  repoUrl?: string;
+  liveUrl?: string;
+  featured: boolean;
+  year: number;
+};
+```
+
+## Key Decisions
+
+**Tailwind v4 over v3** — Tailwind v4 uses CSS-native configuration instead of a `tailwind.config.js`. This changes how custom values are defined (in `globals.css` with `@theme`) and required the `@tailwindcss/postcss` postcss plugin.
+
+**shadcn's `base-nova` theme** — Chose the new `base-nova` base color system over the older `slate`/`zinc` defaults for a cleaner neutral palette.
+
+**`content/` as single source of truth** — Every data structure is typed and exported. The `content/index.ts` barrel re-exports everything so imports stay clean: `import { bio, projects, skills } from "@/content"`.
+
+## Cursor Skills Used
+
+- `create-rule` — Generated project-specific rules before writing any code
+- `shadcn` — Handled Tailwind v4 initialization and component scaffolding
+- `nextjs` — App Router patterns, layout conventions, Server Component defaults

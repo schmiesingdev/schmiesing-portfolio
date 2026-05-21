@@ -1,0 +1,74 @@
+---
+description: Vercel AI SDK patterns for API routes and AI-powered features
+globs: app/api/**
+alwaysApply: false
+---
+
+# AI Feature Patterns
+
+## API Routes — Streaming
+
+All AI API routes use the Vercel AI SDK with streaming:
+
+```ts
+// app/api/chat/route.ts
+import { streamText } from "ai"
+import { openai } from "@ai-sdk/openai"
+
+export async function POST(req: Request) {
+  const { messages } = await req.json()
+
+  const result = streamText({
+    model: openai("gpt-4o-mini"),
+    system: buildSystemPrompt(),  // always inject content/ context
+    messages,
+  })
+
+  return result.toDataStreamResponse()
+}
+```
+
+## System Prompt Construction
+
+Build system prompts from typed `content/` data — never hardcode bio/projects inline:
+
+```ts
+import { projects } from "@/content/projects"
+import { bio } from "@/content/bio"
+
+function buildSystemPrompt() {
+  return `You are an AI assistant for ${bio.name}'s portfolio...
+  
+Projects: ${projects.map(p => `${p.title}: ${p.description}`).join("\n")}
+`
+}
+```
+
+## Client-Side Chat
+
+Use `useChat` from `ai/react` for the chat UI. Keep the hook call in a `"use client"` component:
+
+```tsx
+"use client"
+import { useChat } from "ai/react"
+
+export function ChatWidget() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    api: "/api/chat",
+  })
+  // ...
+}
+```
+
+## Caching AI Responses
+
+For expensive/deterministic AI calls (project summaries), use the `"use cache"` directive from Next.js 16:
+
+```ts
+async function getProjectSummary(projectId: string) {
+  "use cache"
+  // result is cached — won't re-run on every request
+  const result = await generateText({ ... })
+  return result.text
+}
+```

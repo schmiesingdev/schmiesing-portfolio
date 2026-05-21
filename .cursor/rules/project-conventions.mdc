@@ -1,0 +1,38 @@
+---
+description: Core project conventions for the schmiesing portfolio site
+alwaysApply: true
+---
+
+# Portfolio Project Conventions
+
+## Stack
+- Next.js 16 App Router · React 19 · Tailwind v4 · TypeScript · shadcn/ui · Vercel
+
+## File & Folder Structure
+
+```
+app/               # Routes and layouts only — no business logic
+components/        # Shared UI components
+  ui/              # shadcn-generated primitives (do not hand-edit)
+lib/               # Utilities, helpers, server-only logic
+content/           # All site copy and data as typed TypeScript objects
+hooks/             # Client-side custom hooks
+```
+
+## Components
+
+- Default to **Server Components** — no `"use client"` unless the component uses browser APIs, event handlers, or React hooks.
+- One component per file. File name matches the component name in kebab-case: `hero-section.tsx` exports `HeroSection`.
+- Place page-specific components in `app/(section)/` beside the page. Place reusable components in `components/`.
+
+## Content & Data
+
+- All site copy (bio, projects, skills, etc.) lives in `content/` as typed TypeScript objects — never hardcoded in JSX.
+- Export a single typed constant per file, e.g. `content/projects.ts` exports `const projects: Project[]`.
+- This content is fed to the AI chat assistant as context — keep it structured and machine-readable.
+
+## TypeScript
+
+- Prefer `type` over `interface` for object shapes.
+- No `any`. Use `unknown` and narrow it, or define a proper type.
+- Colocate types with the data they describe (e.g. `type Project` lives in `content/projects.ts`).

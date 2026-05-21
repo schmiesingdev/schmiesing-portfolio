@@ -1,0 +1,61 @@
+---
+description: shadcn/ui and Tailwind v4 patterns for TSX components
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# Component Patterns
+
+## shadcn/ui First
+
+Reach for shadcn primitives before writing raw HTML. If a primitive exists, use it:
+
+```tsx
+// ❌ raw div when Card exists
+<div className="rounded-xl border p-6">...</div>
+
+// ✅ shadcn Card
+<Card><CardContent>...</CardContent></Card>
+```
+
+Common primitives: `Button`, `Card`, `Badge`, `Dialog`, `Sheet`, `Separator`, `Skeleton`, `Avatar`, `Tooltip`.
+
+## Class Merging
+
+Always use `cn()` from `@/lib/utils` for conditional or merged classes:
+
+```tsx
+import { cn } from "@/lib/utils"
+
+<div className={cn("base-class", isActive && "active-class", className)} />
+```
+
+## Tailwind v4 Tokens
+
+Use theme tokens over arbitrary values for foundational surfaces:
+
+```tsx
+// ❌ arbitrary
+<div className="bg-[#0a0a0a] text-[#ededed]" />
+
+// ✅ tokens
+<div className="bg-background text-foreground" />
+```
+
+Token reference: `bg-background`, `bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, `text-primary`.
+
+## Dark Mode
+
+Dark mode is applied via the `.dark` class on `<html>`. Use `dark:` variants — do not check `prefers-color-scheme` in JS.
+
+## Icons
+
+Use Lucide icons at `h-4 w-4` (inline) or `h-5 w-5` (standalone). Import from `lucide-react`.
+
+## Avatar Sizing
+
+`Avatar` has no `size` prop. Control size with Tailwind:
+
+```tsx
+<Avatar className="h-12 w-12">...</Avatar>
+```

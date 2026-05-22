@@ -10,6 +10,13 @@ const CHAT_WINDOW_MS = 60 * 1000;
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_CHARS = 2_000;
 
+function getMessageText(msg: UIMessage): string {
+  return msg.parts
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("");
+}
+
 export async function POST(req: Request) {
   const ip = getClientIp(req);
   const result = rateLimit(`chat:${ip}`, CHAT_RATE_LIMIT, CHAT_WINDOW_MS);
@@ -41,15 +48,7 @@ export async function POST(req: Request) {
   }
 
   for (const msg of messages) {
-    const content =
-      typeof msg.content === "string"
-        ? msg.content
-        : Array.isArray(msg.content)
-          ? msg.content
-              .filter((p: { type: string; text?: string }) => p.type === "text")
-              .map((p: { type: string; text?: string }) => p.text ?? "")
-              .join("")
-          : "";
+    const content = getMessageText(msg);
 
     if (content.length > MAX_MESSAGE_CHARS) {
       return NextResponse.json(

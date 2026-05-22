@@ -1,4 +1,4 @@
-# schmiesing.dev — Portfolio
+# schmiesingdev — Portfolio
 
 A personal portfolio built with Next.js 16 App Router that doubles as a live showcase of AI-integrated software engineering. Every phase of the build is documented in the [Devlog](/devlog).
 

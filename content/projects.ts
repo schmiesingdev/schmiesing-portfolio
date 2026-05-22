@@ -40,7 +40,7 @@ export const projects: Project[] = [
       "The entire project was built using AI-assisted development workflows — Cursor, Claude, and structured prompt engineering throughout.",
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Vercel AI SDK", "AI / LLM"],
     repoUrl: "https://github.com/schmiesingdev/schmiesing-portfolio",
-    liveUrl: "https://schmiesing.dev",
+    liveUrl: "https://schmiesing-portfolio.vercel.app/",
     featured: true,
     year: 2026,
   },

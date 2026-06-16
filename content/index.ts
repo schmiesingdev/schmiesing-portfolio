@@ -12,3 +12,6 @@ export type { NavLink } from "./nav";
 
 export { certifications } from "./certifications";
 export type { Certification } from "./certifications";
+
+export { resumes } from "./resumes";
+export type { Resume } from "./resumes";

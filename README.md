@@ -134,3 +134,4 @@ Post content here...
 - [x] Phase 3 — AI Chat: Streaming assistant with RAG-style system prompt
 - [x] Phase 4 — AI Features: Semantic search, cached summaries, devlog
 - [x] Phase 5 — Polish: Vercel Analytics + Speed Insights, performance audit, refined Cursor rules, custom `add-project` skill
+- [x] Phase 6 — Continuous Development: Ongoing site improvements, updated skills and experience, and devlog-backed maintenance

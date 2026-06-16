@@ -38,7 +38,6 @@ export const skillCategories: SkillCategory[] = [
     skills: [
       { name: "Vercel AI SDK", proficiency: "expert" },
       { name: "OpenAI API", proficiency: "expert" },
-      { name: "LangChain", proficiency: "proficient" },
       { name: "Embeddings / RAG", proficiency: "proficient" },
     ],
   },

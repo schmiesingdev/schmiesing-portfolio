@@ -11,7 +11,7 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project, aiSummary }: ProjectCardProps) {
   return (
-    <Card className="group flex flex-col h-full border-border bg-card hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
+    <Card className="group flex flex-col h-full border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-heading font-semibold text-lg leading-snug text-foreground">
@@ -30,8 +30,8 @@ export function ProjectCard({ project, aiSummary }: ProjectCardProps) {
         {aiSummary && (
           <div className="pt-2 border-t border-border/50">
             <div className="flex items-center gap-1.5 mb-1.5">
-              <Sparkles className="h-3 w-3 text-primary/60" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+              <Sparkles className="h-3 w-3 text-accent" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent/80">
                 AI TL;DR
               </span>
             </div>
@@ -59,7 +59,7 @@ export function ProjectCard({ project, aiSummary }: ProjectCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${project.title} GitHub repository`}
-                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors duration-200 cursor-pointer"
               >
                 <GithubIcon className="h-3.5 w-3.5" />
                 Repo
@@ -71,7 +71,7 @@ export function ProjectCard({ project, aiSummary }: ProjectCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${project.title} live site`}
-                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors duration-200 cursor-pointer"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 Live

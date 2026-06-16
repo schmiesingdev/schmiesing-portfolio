@@ -21,7 +21,7 @@ export function HeroSection() {
       {/* Subtle grid background */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#18181b0a_1px,transparent_1px),linear-gradient(to_bottom,#18181b0a_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.12),transparent_35%),linear-gradient(to_right,rgba(8,145,178,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(37,99,235,0.08)_1px,transparent_1px)] bg-[size:100%_100%,4rem_4rem,4rem_4rem]"
       />
 
       <div className="mx-auto max-w-3xl w-full text-center">
@@ -73,7 +73,7 @@ export function HeroSection() {
                 target={link.icon !== "email" ? "_blank" : undefined}
                 rel={link.icon !== "email" ? "noopener noreferrer" : undefined}
                 aria-label={link.label}
-                className="flex items-center justify-center h-10 w-10 rounded-full border border-border bg-background text-muted-foreground hover:text-foreground hover:border-foreground transition-all duration-200 cursor-pointer"
+                className="flex items-center justify-center h-10 w-10 rounded-full border border-border bg-background text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary transition-all duration-200 cursor-pointer"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -85,7 +85,7 @@ export function HeroSection() {
       <a
         href="#projects"
         aria-label="Scroll to projects"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200 cursor-pointer"
       >
         <ArrowDown className="h-5 w-5 animate-bounce motion-reduce:animate-none" />
       </a>

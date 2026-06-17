@@ -1,13 +1,24 @@
 import { bio } from "@/content/bio";
-import { projects } from "@/content/projects";
+import { experienceItems, resumeFacts } from "@/content/experience";
 import { skillCategories } from "@/content/skills";
 import { certifications } from "@/content/certifications";
 
-function buildProjectsContext(): string {
-  return projects
+function buildResumeFactsContext(): string {
+  return resumeFacts
     .map(
-      (p) =>
-        `- **${p.title}** (${p.year}): ${p.longDescription}\n  Tags: ${p.tags.join(", ")}${p.repoUrl ? `\n  Repo: ${p.repoUrl}` : ""}${p.liveUrl ? `\n  Live: ${p.liveUrl}` : ""}`
+      (fact) =>
+        `- **${fact.title}** (${fact.section}):\n${fact.details
+          .map((detail) => `  - ${detail}`)
+          .join("\n")}`
+    )
+    .join("\n\n");
+}
+
+function buildExperienceContext(): string {
+  return experienceItems
+    .map(
+      (item) =>
+        `- **${item.title}**${item.organization ? `, ${item.organization}` : ""} (${item.kind}; ${item.dateRange}${item.location ? `; ${item.location}` : ""}): ${item.longDescription}\n  Highlights:\n${item.highlights.map((highlight) => `  - ${highlight}`).join("\n")}\n  Tags: ${item.tags.join(", ")}${item.repoUrl ? `\n  Repo: ${item.repoUrl}` : ""}${item.liveUrl ? `\n  Live: ${item.liveUrl}` : ""}`
     )
     .join("\n\n");
 }
@@ -42,11 +53,14 @@ Available for work: ${bio.availableForWork ? "Yes" : "No"}
 
 ${bio.longBio}
 
+== RESUME SUMMARY & EDUCATION ==
+${buildResumeFactsContext()}
+
 == SKILLS ==
 ${buildSkillsContext()}
 
-== PROJECTS ==
-${buildProjectsContext()}
+== PROJECTS, INTERNSHIPS & WORK EXPERIENCE ==
+${buildExperienceContext()}
 
 == CERTIFICATIONS ==
 ${buildCertificationsContext()}

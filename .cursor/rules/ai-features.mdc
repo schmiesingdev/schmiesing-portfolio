@@ -35,12 +35,12 @@ System prompt builders live in `lib/ai/`. Import all content from the barrel `@/
 
 ```ts
 // lib/ai/system-prompt.ts
-import { projects, bio, skills } from "@/content"
+import { experienceItems, bio, skills } from "@/content"
 
 export function buildSystemPrompt() {
   return `You are an AI assistant for ${bio.name}'s portfolio...
 
-Projects: ${projects.map(p => `${p.title}: ${p.description}`).join("\n")}
+Experience: ${experienceItems.map(item => `${item.title}: ${item.description}`).join("\n")}
 Skills: ${skills.map(s => s.name).join(", ")}
 `
 }
@@ -64,26 +64,26 @@ export function ChatWidget() {
 
 ## Semantic Search (Embeddings)
 
-Embedding helpers live in `lib/embeddings/`. The search API route at `app/api/search/route.ts` accepts a `{ query: string }` body and returns ranked project results:
+Embedding helpers live in `lib/embeddings/`. The search API route at `app/api/search/route.ts` accepts a search query and returns ranked experience results:
 
 ```ts
 // lib/embeddings/ handles:
 // - generateEmbedding(text) → number[]
 // - cosineSimilarity(a, b) → number
-// - Precomputed embeddings loaded from content/embeddings.json at runtime
+// - Precomputed embeddings loaded from lib/embeddings/experience-embeddings.json at runtime
 ```
 
-After adding a new project to `content/projects.ts`, regenerate embeddings:
+After adding a new experience item to `content/experience.ts`, regenerate embeddings:
 ```bash
 npm run seed:embeddings
 ```
 
 ## Caching Expensive AI Calls
 
-For deterministic AI calls (e.g. project summaries), use the `"use cache"` directive:
+For deterministic AI calls (e.g. experience summaries), use the `"use cache"` directive:
 
 ```ts
-async function getProjectSummary(projectId: string) {
+async function getExperienceSummary(itemId: string) {
   "use cache"
   const result = await generateText({ model: anthropic("claude-3-5-haiku-20241022"), ... })
   return result.text

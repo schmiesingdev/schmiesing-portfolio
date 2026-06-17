@@ -31,6 +31,10 @@ export function ChatWidget() {
   });
 
   const isActive = status === "streaming" || status === "submitted";
+  const errorMessage =
+    error?.message && error.message !== "An error occurred."
+      ? error.message
+      : "The AI assistant is temporarily unavailable. Please try again in a moment.";
 
   useEffect(() => {
     if (open) {
@@ -206,7 +210,7 @@ export function ChatWidget() {
           {/* Error state */}
           {error && (
             <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 rounded-lg px-3 py-2">
-              <span className="flex-1">Something went wrong.</span>
+              <span className="flex-1">{errorMessage}</span>
               <button
                 onClick={() => regenerate()}
                 className="flex items-center gap-1 text-xs font-medium hover:underline cursor-pointer"
@@ -252,7 +256,7 @@ export function ChatWidget() {
             </button>
           </form>
           <p className="text-center text-[10px] text-muted-foreground/60 mt-1.5">
-            Powered by Vercel AI SDK · Claude Sonnet
+            Powered by Vercel AI SDK · GPT-5.4 Nano
           </p>
         </div>
       </div>

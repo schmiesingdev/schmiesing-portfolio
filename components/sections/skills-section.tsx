@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const proficiencyStyles = {
-  expert: "bg-foreground text-background hover:bg-foreground/90",
+  expert: "bg-primary text-primary-foreground hover:bg-primary/90",
   proficient: "bg-secondary text-secondary-foreground",
   familiar: "bg-muted text-muted-foreground",
 } as const;
@@ -50,11 +50,11 @@ export function SkillsSection() {
 
         <p className="mt-6 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5 mr-4">
-            <span className="inline-block h-2 w-2 rounded-full bg-foreground" />
+            <span className="inline-block h-2 w-2 rounded-full bg-primary" />
             Expert
           </span>
           <span className="inline-flex items-center gap-1.5 mr-4">
-            <span className="inline-block h-2 w-2 rounded-full bg-secondary-foreground/30" />
+            <span className="inline-block h-2 w-2 rounded-full bg-secondary-foreground/50" />
             Proficient
           </span>
           <span className="inline-flex items-center gap-1.5">

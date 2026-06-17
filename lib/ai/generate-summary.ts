@@ -1,18 +1,18 @@
 import { generateText } from "ai";
 import { cacheLife, cacheTag } from "next/cache";
 
-export async function generateProjectSummary(
-  projectId: string,
+export async function generateExperienceSummary(
+  itemId: string,
   longDescription: string
 ): Promise<string> {
   "use cache";
   cacheLife("days");
-  cacheTag(`project-summary-${projectId}`);
+  cacheTag(`experience-summary-${itemId}`);
 
   try {
     const { text } = await generateText({
       model: "anthropic/claude-sonnet-4.6",
-      prompt: `Write a single concise sentence (max 20 words) that captures the most impressive technical or engineering aspect of this project. No filler phrases like "This project" or "A system". Start directly with a verb or noun.\n\n${longDescription}`,
+      prompt: `Write a single concise sentence (max 20 words) that captures the most impressive technical, engineering, leadership, or product aspect of this experience. No filler phrases like "This project" or "This role". Start directly with a verb or noun.\n\n${longDescription}`,
       maxOutputTokens: 60,
     });
     return text.trim().replace(/\.$/, "") + ".";

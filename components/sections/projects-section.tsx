@@ -1,20 +1,20 @@
-import { projects } from "@/content";
-import { generateProjectSummary } from "@/lib/ai/generate-summary";
+import { experienceItems } from "@/content";
+import { generateExperienceSummary } from "@/lib/ai/generate-summary";
 import { ProjectSearchContainer } from "@/components/sections/project-search-container";
 
-export type EnrichedProject = (typeof projects)[number] & {
+export type EnrichedExperienceItem = (typeof experienceItems)[number] & {
   aiSummary: string;
 };
 
 export async function ProjectsSection() {
   const summaries = await Promise.all(
-    projects.map((p) =>
-      generateProjectSummary(p.id, p.longDescription).catch(() => "")
+    experienceItems.map((item) =>
+      generateExperienceSummary(item.id, item.longDescription).catch(() => "")
     )
   );
 
-  const enriched: EnrichedProject[] = projects.map((p, i) => ({
-    ...p,
+  const enriched: EnrichedExperienceItem[] = experienceItems.map((item, i) => ({
+    ...item,
     aiSummary: summaries[i],
   }));
 
@@ -23,15 +23,15 @@ export async function ProjectsSection() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-12">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-3">
-            Projects
+            Projects &amp; Experience
           </h2>
           <p className="text-muted-foreground max-w-lg">
-            A selection of things I&apos;ve built — from AI-integrated platforms
-            to systems engineering.
+            A searchable view of projects, internships, and work positions
+            drawn from my resume-backed experience.
           </p>
         </div>
 
-        <ProjectSearchContainer projects={enriched} />
+        <ProjectSearchContainer items={enriched} />
       </div>
     </section>
   );

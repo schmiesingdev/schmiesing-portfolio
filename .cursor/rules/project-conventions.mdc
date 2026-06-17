@@ -41,10 +41,10 @@ scripts/           # One-off ops (seed:embeddings, etc.) — not imported at run
 
 ## Content & Data
 
-- All site copy (bio, projects, skills, certifications, etc.) lives in `content/` as typed TypeScript objects — never hardcoded in JSX.
-- Export a single typed constant per file: `content/projects.ts` → `export const projects: Project[]`.
-- Re-export everything through `content/index.ts` so imports stay clean: `import { projects, bio } from "@/content"`.
-- **Adding a new project**: edit `content/projects.ts` only. The AI chat, semantic search, and project cards all derive from that single source. See the project skill for the full workflow.
+- All site copy (bio, experience, skills, certifications, etc.) lives in `content/` as typed TypeScript objects — never hardcoded in JSX.
+- Export a single typed constant per file: `content/experience.ts` → `export const experienceItems: ExperienceItem[]`.
+- Re-export everything through `content/index.ts` so imports stay clean: `import { experienceItems, bio } from "@/content"`.
+- **Adding a new project, internship, or work role**: edit `content/experience.ts`, then run `npm run seed:embeddings`. The AI chat, semantic search, and experience cards all derive from that single source.
 - This content feeds the AI chat system prompt — keep it structured and machine-readable.
 
 ## TypeScript
@@ -57,5 +57,5 @@ scripts/           # One-off ops (seed:embeddings, etc.) — not imported at run
 
 - `npm run dev` — local dev server
 - `npm run build` — production build
-- `npm run seed:embeddings` — regenerate project embeddings (run after adding a project)
+- `npm run seed:embeddings` — regenerate experience embeddings (run after changing `content/experience.ts`)
 - Never import from `scripts/` in app code — scripts are standalone CLI tools.

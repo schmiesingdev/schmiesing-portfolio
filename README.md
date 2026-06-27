@@ -25,7 +25,8 @@ cp .env.local.example .env.local
 
 | Variable | Description |
 |----------|-------------|
-| `AI_GATEWAY_API_KEY` | Vercel AI Gateway key — get one at [vercel.com/ai](https://vercel.com/ai) |
+| `AI_GATEWAY_API_KEY` | Optional Vercel AI Gateway API key for local dev or CI. On Vercel deployments, OIDC auth is preferred — if this key is set in Production it overrides OIDC and bills against the key's team credits. |
+| `VERCEL_OIDC_TOKEN` | Provisioned by `vercel env pull` for local OIDC auth (recommended). |
 
 ### Development
 

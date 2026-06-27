@@ -71,7 +71,7 @@ export const experienceItems: ExperienceItem[] = [
     ],
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Vercel AI SDK", "AI / LLM"],
     repoUrl: "https://github.com/schmiesingdev/schmiesing-portfolio",
-    liveUrl: "https://schmiesing-portfolio.vercel.app/",
+    liveUrl: "https://schmiesingdevelopment.dev/",
     featured: true,
   },
   {

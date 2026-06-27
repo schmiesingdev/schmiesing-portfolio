@@ -16,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const SITE_URL = "https://schmiesing-portfolio.vercel.app";
+const SITE_URL = "https://schmiesingdevelopment.dev";
 const TITLE = "Matthew Schmiesing — Software Engineering Lead";
 const DESCRIPTION =
   "Full-stack software engineer and MBA candidate building AI-powered products at the intersection of engineering and intelligent systems.";
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     url: SITE_URL,
-    siteName: "schmiesing.dev",
+    siteName: "schmiesingdevelopment.dev",
     type: "website",
   },
   twitter: {

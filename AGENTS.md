@@ -14,9 +14,10 @@ Add these in [Cursor Dashboard → Cloud Agents → Secrets](https://cursor.com/
 
 | Variable | Required for |
 |----------|--------------|
-| `AI_GATEWAY_API_KEY` | `/api/chat`, `/api/search`, and `npm run seed:embeddings` |
+| `AI_GATEWAY_API_KEY` | `/api/chat`, `/api/search`, and `npm run seed:embeddings` (optional if using OIDC) |
+| `VERCEL_OIDC_TOKEN` | Local OIDC auth from `vercel env pull` (preferred over API key on deployments) |
 
-Without `AI_GATEWAY_API_KEY`, the site still builds and renders — only AI features fail at runtime. See `.env.local.example` for the variable name.
+Without AI Gateway auth, the site still builds and renders — only AI features fail at runtime. On Vercel Production, avoid setting `AI_GATEWAY_API_KEY` unless you intend to bill through that key; a free-tier key will rate-limit chat even when the project team has paid credits.
 
 ### Verify changes before opening a PR
 

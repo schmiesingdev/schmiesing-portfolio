@@ -7,6 +7,11 @@ import {
   type UIMessageStreamWriter,
 } from "ai";
 import { NextResponse } from "next/server";
+import {
+  CHAT_UNAVAILABLE_MESSAGE,
+  getChatErrorMessage,
+} from "@/lib/ai/chat-errors";
+import { CHAT_MODEL } from "@/lib/ai/models";
 import { buildSystemPrompt } from "@/lib/ai/system-prompt";
 import { rateLimit, getClientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
@@ -16,28 +21,12 @@ const CHAT_RATE_LIMIT = 10;
 const CHAT_WINDOW_MS = 60 * 1000;
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_CHARS = 2_000;
-const CHAT_UNAVAILABLE_MESSAGE =
-  "I can answer questions about Matt's background, but the AI provider is temporarily unavailable. Please try again in a moment, or use the contact link if this is time-sensitive.";
 
 function getMessageText(msg: UIMessage): string {
   return msg.parts
     .filter((part) => part.type === "text")
     .map((part) => part.text)
     .join("");
-}
-
-function getChatErrorMessage(error: unknown): string {
-  const message = error instanceof Error ? error.message : String(error);
-
-  if (/rate.?limit|too many|429/i.test(message)) {
-    return "The AI provider is rate-limited right now. Please wait a moment and try again.";
-  }
-
-  if (/auth|api key|credential|unauthorized|forbidden/i.test(message)) {
-    return "The AI provider is not configured correctly. Please check the deployment environment variables.";
-  }
-
-  return CHAT_UNAVAILABLE_MESSAGE;
 }
 
 function createFallbackResponse(message: string, headers: Record<string, string>) {
@@ -105,9 +94,10 @@ export async function POST(req: Request) {
 
   try {
     const streamResult = streamText({
-      model: "openai/gpt-5.4-nano",
+      model: CHAT_MODEL,
       system: buildSystemPrompt(),
       messages: await convertToModelMessages(messages),
+      maxRetries: 0,
     });
 
     const stream = createUIMessageStream({

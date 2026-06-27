@@ -25,7 +25,7 @@ export const bio: Bio = {
     "I'm a software engineer and MBA candidate at Franciscan University of Steubenville, where I'm completing a concentration in AI Management alongside my BS in Software Engineering. " +
     "I build full-stack applications using React, Ruby on Rails, Vue.js, and Python — and I care deeply about how AI can be embedded into real products, not just prototypes. " +
     "At Saint Paul Center, I redesigned subscription architecture and led full-stack delivery using AI-assisted development tools like Cursor and Claude. " +
-    "I've also built agentic workflows, structured prompt systems, and analytics platforms — most recently leading an interdisciplinary team on a predictive maintenance system for Cummins as my senior capstone. " +
+    "I've also built agentic workflows, structured prompt systems, and analytics platforms — most recently leading an interdisciplinary team on a predictive maintenance system for Cummins using Arduino-based sensor integration as my senior capstone. " +
     "My edge is bridging technical depth with clear communication: I translate complex requirements into structured tasks, review agent outputs critically, and maintain rigorous engineering standards across the SDLC.",
   location: "Steubenville, Ohio",
   availableForWork: true,

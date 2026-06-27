@@ -145,13 +145,13 @@ export const experienceItems: ExperienceItem[] = [
     description:
       "Senior capstone project leading an interdisciplinary team building predictive maintenance analytics for Cummins brake components.",
     longDescription:
-      "For his senior capstone, Matthew led an interdisciplinary engineering team building a predictive maintenance system that connects mechanical systems, data analysis, and software architecture. The project applies AI and analytics concepts to optimize component lifecycles, support reliable production-minded deployment, and guide planning, communication, and integration decisions across disciplines.",
+      "For his senior capstone, Matthew led an interdisciplinary engineering team building a predictive maintenance system that connects mechanical systems, Arduino-based sensor data collection, data analysis, and software architecture. The project applies analytics concepts to optimize component lifecycles, support reliable production-minded deployment, and guide planning, communication, and integration decisions across disciplines.",
     highlights: [
       "Led an interdisciplinary team building a predictive maintenance system for Cummins brake components.",
-      "Connected mechanical systems, analytics, and software architecture to support lifecycle optimization.",
+      "Connected mechanical systems, Arduino-based data acquisition, and software architecture to support lifecycle optimization.",
       "Guided planning, communication, integration decisions, and delivery coordination.",
     ],
-    tags: ["Systems Engineering", "Analytics", "Predictive Maintenance", "AI / LLM", "Leadership", "Cummins"],
+    tags: ["Arduino", "Systems Engineering", "Analytics", "Predictive Maintenance", "Leadership", "Cummins"],
     featured: true,
   },
   {

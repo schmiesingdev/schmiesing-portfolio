@@ -42,3 +42,7 @@ next-env.d.ts
 
 # cursor skills (generated tool cache)
 .cursor/skills/**/__pycache__
+
+# job-specific tailored resumes (generic resumes stay in resumes/)
+/resumes/tailored/*
+!/resumes/tailored/.gitkeep
